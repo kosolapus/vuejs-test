@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import api from '@/api';
+import getPayments from '@/mocks/getPayments';
 
 Vue.use(Vuex);
 
@@ -32,7 +33,7 @@ export default new Vuex.Store({
       commit('setState', { isLoading: true });
 
       try {
-        const { data } = await api.getPayments(params);
+        const { data } = process.env.VUE_APP_DATA_SOURCE === 'mock' ? await getPayments(params) : await api.getPayments(params);
 
         if (Array.isArray(data)) {
           commit('setState', { data });

@@ -4,7 +4,7 @@
       <ui-money v-model="moneyFilter" />
     </div>
 
-    <!-- Your component code here -->
+    <table-content class="data-table__content" :items="currentPageItems" />
 
     <div class="data-table__paginator">
       <ui-pagination
@@ -16,10 +16,12 @@
 </template>
 
 <script>
+import TableContent from '@/components/TableContent.vue';
+
 export default {
 
   name: 'DataTable',
-
+  components: { TableContent },
   props: {
     rows: {
       type: Array,
@@ -38,8 +40,25 @@ export default {
   }),
 
   computed: {
+    filteredRows() {
+      const filteredRows = this.rows.filter((row) => Number(row.money) <= this.moneyFilter);
+      return filteredRows.length ? filteredRows : this.rows;
+    },
     pageCount() {
-      return Math.ceil(this.rows.length / this.pageSize);
+      return Math.ceil(this.filteredRows.length / this.pageSize);
+    },
+    currentPageItems() {
+      const currentPage = this.page > 0 ? this.page : 1;
+      const start = (currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.filteredRows.slice(start, end);
+    },
+  },
+  watch: {
+    pageCount() {
+      if (this.page > this.pageCount) {
+        this.page = this.pageCount;
+      }
     },
   },
 };

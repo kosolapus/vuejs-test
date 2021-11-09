@@ -1,0 +1,9 @@
+.data-table{
+  &__filter{
+    display: flex;
+    justify-content: flex-end;
+  }
+  &__content{
+    margin: 1rem 0;
+  }
+}

@@ -33,7 +33,7 @@ export default {
 
       const formatted = floatValidator(this.valueInput);
       this.valueInput = formatted.strValue;
-      if (formatted.isValid) {
+      if (formatted.value) {
         this.$emit('input', formatted.value);
       }
     },

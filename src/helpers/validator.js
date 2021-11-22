@@ -7,7 +7,6 @@ export const floatValidator = (value) => {
     return {
       value: undefined,
       strValue: '',
-      isValid: false,
     };
   }
   const lastSymbolIsDot = clearValue[clearValue.length - 1] === '.';
@@ -27,6 +26,5 @@ export const floatValidator = (value) => {
   return {
     value: parseFloat(clearValue),
     strValue: `${moneyFormatter(clearValue)}${isLastDot ? '.' : ''}`,
-    isValid: true,
   };
 };

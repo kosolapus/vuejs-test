@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import api from '@/api';
 import getPayments from '@/mocks/getPayments';
+import * as CacheManager from '@/helpers/CacheManager';
 
 Vue.use(Vuex);
 
@@ -33,9 +34,18 @@ export default new Vuex.Store({
       commit('setState', { isLoading: true });
 
       try {
-        const { data } = process.env.VUE_APP_DATA_SOURCE === 'mock' ? await getPayments(params) : await api.getPayments(params);
+        const cachedData = CacheManager.get();
+        if (cachedData) {
+          commit('setState', { isCached: true });
+        }
+        const { data } = cachedData || (process.env.VUE_APP_DATA_SOURCE === 'mock' ? await getPayments(params) : await api.getPayments(params));
 
         if (Array.isArray(data)) {
+          if (!cachedData) {
+            const isCached = CacheManager.set({ data });
+            commit('setState', { isCached });
+          }
+
           commit('setState', { data });
         }
       } catch (e) {
@@ -44,6 +54,11 @@ export default new Vuex.Store({
       } finally {
         commit('setState', { isLoading: false });
       }
+    },
+    async clearCache({ dispatch, commit }) {
+      CacheManager.set(null);
+      commit('setState', { isCached: false });
+      dispatch('load');
     },
   },
 });

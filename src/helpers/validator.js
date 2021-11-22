@@ -1,7 +1,7 @@
 import { moneyFormatter } from '@/helpers/formatter';
 
 export const floatValidator = (value) => {
-  let clearValue = value.replace(/[^\d,.]/g, '').replace(/[,]/g, '.');
+  let clearValue = value.replace(/[^\d,.]/g, '').replace(/[,]/g, '.').replace('..', '.');
 
   if (!clearValue.length) {
     return {
@@ -17,7 +17,6 @@ export const floatValidator = (value) => {
   if (!notFirstDot) {
     clearValue = clearValue.replace('.', '');
   }
-
   const pieces = clearValue.split('.');
   if (pieces.length > 1) {
     clearValue = [pieces[0], pieces[1].slice(0, 2)].join('.');

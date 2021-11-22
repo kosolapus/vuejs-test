@@ -56,7 +56,7 @@ export default new Vuex.Store({
       }
     },
     async clearCache({ dispatch, commit }) {
-      CacheManager.set(null);
+      CacheManager.clear();
       commit('setState', { isCached: false });
       dispatch('load');
     },
